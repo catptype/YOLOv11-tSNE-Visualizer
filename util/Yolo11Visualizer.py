@@ -16,9 +16,10 @@ class Yolo11Visualizer:
     or raw logits using hooks, and visualizing the features using t-SNE.
 
     Attributes:
-        model (YOLO): The YOLOv11 model for feature extraction.
-        seed (int): Random seed for reproducibility.
-        __raw_logits (torch.Tensor): Stores raw logits extracted using a hook.
+        __model (YOLO): The YOLOv11 model used for feature extraction.
+        __seed (int): Random seed for reproducibility in t-SNE.
+        __target_module (str): The specific model module name to attach the hook for extracting raw logits.
+        __raw_logits (torch.Tensor): Stores raw logits extracted using a forward hook.
     """
     def __init__(self, model: str, seed: int = 42) -> None:
         """
@@ -30,6 +31,7 @@ class Yolo11Visualizer:
         """
         self.__model = YOLO(model, task='classify')
         self.__seed = seed
+        self.__target_module = "model.model.10.linear"
         self.__raw_logits = None
     
     def _tsne_features(self, features: np.ndarray, perplexity: int) -> np.ndarray:
@@ -135,8 +137,9 @@ class Yolo11Visualizer:
            
             # Hook into the layer you want features from
             for name, module in self.__model.named_modules():
-                if name == "model.model.10.linear":
+                if name == self.__target_module:
                     module.register_forward_hook(hook)
+                    break
 
             # Perform a forward pass
             _ = self.__model(image, verbose=False)
