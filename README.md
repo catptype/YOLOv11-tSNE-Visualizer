@@ -2,7 +2,7 @@
 
 A visualizer for t-SNE analysis of features extracted from a YOLOv11 model. This project supports extracting features from the YOLOv11 model at the **softmax layer** or **raw logits** using hooks and visualizing the features using **t-SNE**.
 
-![Scatter Plot Example](scatter_plot.jpg)
+![Scatter Plot Example](<result/t-SNE Scatter.jpg>)
 
 ---
 
@@ -27,7 +27,8 @@ YOLOv11-tSNE-Visualizer is a Python-based tool designed to help you analyze high
 - **Feature Extraction**: Extract features at the softmax layer or raw logits using hooks.
 - **t-SNE Visualization**: Dimensionality reduction for visualizing high-dimensional data.
 - **Customizable Colormap**: Choose from various colormaps to tailor your scatter plots.
-- **High-Quality Exports**: Save your scatter plots as high-resolution JPEG images.
+- **High-Quality Exports**: Save your scatter plots as high-resolution JPEG images with scatter point data stored in a text file.
+- **Cluster Comparison**: Compare clusters by pairing or grouping classes.
 
 ---
 
@@ -72,14 +73,16 @@ YOLOv11-tSNE-Visualizer is a Python-based tool designed to help you analyze high
    visualizer = Yolo11Visualizer("path/to/your/yolov11/model.pt")
 
    # Visualize using raw logits
-   visualizer.visualize_tsne(image_paths=["path/to/image1.jpg", "path/to/image2.jpg"], perplexity=30, logit=True, color='rainbow')
+   visualizer.calculate_tsne(image_paths=["path/to/image1.jpg", "path/to/image2.jpg"], perplexity=30, logit=True, worker=8)
 
    # Visualize using softmax features
-   visualizer.visualize_tsne(image_paths=["path/to/image1.jpg", "path/to/image2.jpg"], perplexity=30, logit=False, color='rainbow')
+   visualizer.calculate_tsne(image_paths=["path/to/image1.jpg", "path/to/image2.jpg"], perplexity=30, logit=False, worker=8)
    ```
+   > `worker` is number of worker (or thread) for processing
 
 3. **Scatter plot output**:
-   The scatter plot will be displayed and saved as a high-resolution JPEG file (`scatter_plot.jpg`) in the project directory.
+   The full scatter plot will be displayed and saved as a JPEG file (`t-SNE Scatter.jpg`) in the `result` directory.
+   The comparison scatter plot will be saved in `compare` directory.
 
 ---
 
